@@ -3,13 +3,6 @@
  *
  * SPDX-License-Identifier: MIT
  */
- 
-#include <behaviors.dtsi>
-#include <dt-bindings/zmk/keys.h>
-#include <dt-bindings/zmk/bt.h>
-#include <dt-bindings/zmk/ext_power.h>
-#include <dt-bindings/zmk/rgb.h>
-
 /*
  * Temporarily here because nice nano v2 spi is not defined on ZMK Yet
  * Source: https://github.com/zmkfirmware/zmk/blob/main/app/boards/shields/reviung41/boards/nice_nano.overlay
@@ -17,12 +10,15 @@
  */
 
 #include <dt-bindings/led/led.h>
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/ext_power.h>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/rgb.h>
 
 &pinctrl {
     spi3_default: spi3_default {
-        group1 {
-            psels = <NRF_PSEL(SPIM_MOSI, 0, 8)>;
-        };
+        group1 { psels = <NRF_PSEL(SPIM_MOSI, 0, 8)>; };
     };
 
     spi3_sleep: spi3_sleep {
@@ -36,7 +32,6 @@
 &spi3 {
     compatible = "nordic,nrf-spim";
     status = "okay";
-
     pinctrl-0 = <&spi3_default>;
     pinctrl-1 = <&spi3_sleep>;
     pinctrl-names = "default", "sleep";
@@ -46,32 +41,30 @@
         label = "WS2812";
 
         /* SPI */
+
         reg = <0>; /* ignored, but necessary for SPI bindings */
         spi-max-frequency = <4000000>;
 
         /* WS2812 */
+
         chain-length = <30>;
         spi-one-frame = <0x70>;
         spi-zero-frame = <0x40>;
-
         color-mapping = <LED_COLOR_ID_GREEN LED_COLOR_ID_RED LED_COLOR_ID_BLUE>;
     };
 };
 
 / {
-    chosen {
-        zmk,underglow = &led_strip;
-    };
+    chosen { zmk,underglow = &led_strip; };
 };
 
 /* END temporary RGB support section */
-
 
 / {
     keymap {
         compatible = "zmk,keymap";
 
-           default_layer {
+        default_layer {
             // ------------------------------------------------------------------------------------------------------------------
             // |  `    |  1  |  2  |  3   |  4   |  5   |                         |  6   |  7    |  8    |  9   |   0   |       |
             // |  ESC  |  Q  |  W  |  E   |  R   |  T   |                         |  Y   |  U    |  I    |  O   |   P   | BKSPC |
@@ -80,7 +73,7 @@
             //               | GUI | ALT  | CTRL | LOWER|  ENTER |        | SPACE | RAISE| CTRL  | ALT   | GUI  |
 
             bindings = <
-&kp GRAVE  &kp N1  &kp N2     &kp N3    &kp N4    &kp N5                                   &kp N6  &kp N7     &kp N8     &kp N9    &kp N0    &kp DEL 
+&kp GRAVE  &kp N1  &kp N2     &kp N3    &kp N4    &kp N5                                   &kp N6  &kp N7     &kp N8     &kp N9    &kp N0    &none
 &kp ESC    &kp Q   &kp W      &kp E     &kp R     &kp T                                    &kp Y   &kp U      &kp I      &kp O     &kp P     &kp BSPC
 &kp TAB    &kp A   &kp S      &kp D     &kp F     &kp G                                    &kp H   &kp J      &kp K      &kp L     &kp SEMI  &kp SQT
 &kp LSHFT  &kp Z   &kp X      &kp C     &kp V     &kp B   &kp C_MUTE    &ext_power EP_TOG  &kp N   &kp M      &kp COMMA  &kp DOT   &kp FSLH  &kp RSHFT
